@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <title>Bookshelf | カンタン！あなたのオンライン本棚</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- 自サイトのCSS -->
+  <link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+  <!-- 最初のローディング表示 -->
+  <section id="loading" class="view">
+    <i class="initial-loading-icon fas fa-sync" aria-hidden="true"></i>
+  </section>
+  <!-- /#loading -->
+
+  <!-- ログイン画面 -->
+  <section id="login" class="view">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-sm-10 col-md-8 col-lg-6">
+          <form id="login-form">
+            <div class="form-group login__email">
+              <label for="login-email" class="col-form-label">
+                メールアドレス
+              </label>
+              <div>
+                <input id="login-email" type="email" class="form-control" required>
+              </div>
+            </div>
+            <div class="form-group login__password">
+              <label for="login-password" class="col-form-label">
+                パスワード
+              </label>
+              <div>
+                <input id="login-password" type="password" class="form-control" required>
+              </div>
+            </div>
+            <div id="login__help" class="alert alert-danger"></div>
+            <div class="form-group login__submit">
+              <div>
+                <button id="login__submit-button" type="submit" class="btn btn-success">
+                  ログイン
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- /#login -->
+
+  <!-- 書籍一覧画面 -->
+  <section id="bookshelf" class="view">
+    <header>
+      <div id="header">
+        <div id="logo">
+          <!-- <a href="./bookshelf_index.php" -->
+          <a href="./index.html"><img src="./images/logo.png" alt="Bookshelf"></a>
+        </div>
+        <a href="#add-book-modal" data-toggle="modal" class="add-button">
+          <i class="fas fa-plus-circle" aria-hidden="true"></i>
+          書籍の登録
+        </a>
+        <button class="btn btn-primary logout-button">
+          ログアウト
+        </button>
+      </div>
+    </header>
+    <div id="cover">
+      <h1 id="cover__title">カンタン！あなたのオンライン本棚</h1>
+    </div>
+    <div class="wrapper">
+      <div id="main">
+        <div id="book-list" class="clearfix"></div>
+      </div>
+    </div>
+  </section>
+  <!-- /#bookshelf -->
+
+  <div id="book-template">
+    <!-- 書籍のテンプレート -->
+    <div class="book-item">
+      <div class="book-item__image-wrapper">
+        <img class="book-item__image" alt="">
+      </div>
+      <div class="book-item__detail">
+        <div class="book-item__title"></div>
+        <div class="book-item__delete-wrapper">
+          <button class="btn btn-danger book-item__delete">
+            <i class="fas fa-trash-alt" aria-hidden="true"></i>
+            削除
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- /.book-item -->
+  </div>
+
+  <!-- 書籍情報追加モーダル -->
+  <div id="add-book-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">書籍の登録</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body m-1">
+          <form id="book-form">
+            <div class="form-group row">
+              <label for="add-book-title" class="col-md-3  col-form-label">タイトル</label>
+              <div class="col-md-9">
+                <input id="add-book-title" type="text" class="form-control" required>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-3">表紙画像</div>
+              <div class="col-md-9">
+                <div class="custom-file">
+                  <input id="add-book-image" type="file" accept=".jpg,.jpeg,.png,.gif, image/jpeg,image/png,image/gif"
+                    class="custom-file-input" required>
+                  <label id="add-book-image-label" class="custom-file-label" for="add-book-image">ファイルを選択</label>
+                </div>
+              </div>
+            </div>
+            <div id="add-book__help" class="alert alert-danger"></div>
+            <button id="submit_add_book" type="submit" class="btn btn-default btn-success btn-block">
+              保存する
+            </button>
+        </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+  </div>
+  <!-- /#add-book-modal -->
+
+  <!-- Firebaseのセットアップコード（下記のSDKのバージョンは6.2.0） -->
+  <!-- The core Firebase JS SDK is always required and must be listed first 
+    (中心となるFirebase SDKです。常に必要で、最初に記述する必要があります) -->
+  <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#config-web-app
+        (使いたいFirebaseサービス用のSDKを加えます) -->
+  <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-storage.js"></script>
+
+  <!-- apiKeyなどは、ご自身の環境のものに合わせてください -->
+  <script>
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCy1AE7iRKJEjI18VKKMMEC_YlhuKMpdOA",
+      authDomain: "realtime-chat-31c96.firebaseapp.com",
+      databaseURL: "https://realtime-chat-31c96.firebaseio.com",
+      projectId: "realtime-chat-31c96",
+      storageBucket: "realtime-chat-31c96.appspot.com",
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+  <!-- Popper.js, 次に Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  <script src="main.js"></script>
+
+  <!-- Font Awesome -->
+  <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js"></script>
+</body>
+
+</html>
